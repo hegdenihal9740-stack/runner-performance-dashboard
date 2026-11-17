@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform, useSpring, useMotionValue, useMotionValueEvent, useInView, MotionConfig } from 'framer-motion'
 import { ArrowUpRight, ArrowRight, Menu, X, ChevronDown, Check, Zap, ShieldCheck, Globe2, Layers3, Workflow, BarChart3, Users, Boxes, Wallet, Truck, FileText, LockKeyhole, GraduationCap, ShoppingBag, Rocket, Play, Sparkles, Plus, Minus, Phone, MapPin, Github, Linkedin, Twitter, Search, CalendarDays, Mail, TrendingUp, Activity, Clock3 } from 'lucide-react'
 const OrbitalScene = React.lazy(() => import('./OrbitalScene'))
+const ModuleScene = React.lazy(() => import('./ModuleScenes'))
+import ModuleWorkspace from './ModuleWorkspace'
+function ClientModuleScene({index,paused}){const ref=React.useRef(null);const inView=useInView(ref,{margin:'120px'});const [mounted,setMounted]=useState(false);React.useEffect(()=>setMounted(true),[]);return <div ref={ref} className="mf-scene" aria-hidden="true">{mounted&&<React.Suspense fallback={null}><ModuleScene index={index} paused={paused||!inView} sparkles={false} distance={6.6} className="mf-canvas"/></React.Suspense>}</div>}
 function ClientOrbitalScene(){const [mounted,setMounted]=useState(false);React.useEffect(()=>setMounted(true),[]);if(!mounted)return <div className="orbital-canvas"/>;return <React.Suspense fallback={<div className="orbital-canvas"/>}><OrbitalScene/></React.Suspense>}
 
 const modules = [
@@ -138,131 +141,14 @@ function Modules(){
  const [active,setActive]=useState(0)
  const [workspaceOpen,setWorkspaceOpen]=useState(false)
  const openWorkspace=index=>{setActive(index);setWorkspaceOpen(true)}
+ const closeWorkspace=React.useCallback(()=>setWorkspaceOpen(false),[])
  const rowRefs=React.useRef([])
  React.useEffect(()=>{const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)setActive(Number(e.target.dataset.index))})},{rootMargin:'-46% 0px -46% 0px'});rowRefs.current.forEach(el=>el&&io.observe(el));return()=>io.disconnect()},[])
  return <section className="section modules-section" id="modules" style={{'--mod-accent':moduleAccents[modules[active].color]}}><div className="modules-aurora" aria-hidden="true"><i/><i/><span className="modules-grid"/></div><div className="container"><SectionHeading eyebrow="CAPABILITIES" title={<>Everything you need.<br/><span className="muted-heading">Nothing you don't.</span></>} copy="Choose a module to step inside a live, interactive workspace. Explore the connected tools your team could use every day."/>
  <div className="module-layout"><div className="module-list" role="list" aria-label="Business modules">{modules.map((m,i)=>{const I=m.icon;return <motion.button type="button" key={m.name} ref={el=>{rowRefs.current[i]=el}} data-index={i} onMouseEnter={()=>setActive(i)} initial={{opacity:0,x:-40,rotateY:-25}} whileInView={{opacity:1,x:0,rotateY:0}} viewport={{once:true,amount:.5}} transition={{duration:.7,ease,delay:i*.05}} style={{transformPerspective:900,transformOrigin:'0% 50%'}} className={`module-row ${active===i?'selected':''}`} onClick={()=>openWorkspace(i)} aria-pressed={active===i}>{active===i&&<motion.span layoutId="module-active-bar" className="module-active-bar" transition={{type:'spring',stiffness:380,damping:30}}/>}<span className="module-num">{m.n}</span><span className={`module-icon ${m.color}`}><I size={19}/></span><span className="module-title">{m.name}<small>{m.tag}</small></span><ArrowUpRight className="module-arrow" size={17}/></motion.button>})}</div>
- <TiltCard className="module-feature-stage" max={6}><AnimatePresence mode="wait" initial={false}><motion.div className={`module-feature ${modules[active].color}`} key={active} style={{transformPerspective:1200}} initial={{opacity:0,rotateY:38,x:40,scale:.94,filter:'blur(8px)'}} animate={{opacity:1,rotateY:0,x:0,scale:1,filter:'blur(0px)',transition:{duration:.55,ease}}} exit={{opacity:0,rotateY:-30,x:-30,scale:.96,filter:'blur(6px)',transition:{duration:.2,ease:easeIn}}}><div className="feature-particles" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/><i/></div><motion.div className={`feature-orb ${modules[active].color}`} initial={{rotateY:-180,scale:.5,opacity:0}} animate={{rotateY:0,scale:1,opacity:1}} transition={{type:'spring',stiffness:160,damping:14,delay:.05}} style={{transformPerspective:600}}>{React.createElement(modules[active].icon,{size:43,strokeWidth:1.4})}</motion.div><span className="feature-number">MODULE / {modules[active].n}</span><h3 className="feature-title" aria-label={modules[active].name}>{modules[active].name.split('').map((c,k)=><motion.span key={k} aria-hidden="true" initial={{opacity:0,y:'0.6em',rotateX:-90}} animate={{opacity:1,y:0,rotateX:0}} transition={{delay:.12+k*.028,duration:.5,ease}} style={{display:'inline-block',whiteSpace:'pre',transformOrigin:'50% 100%'}}>{c}</motion.span>)}</h3><p>{modules[active].desc}</p><button type="button" className="text-link" onClick={()=>openWorkspace(active)}>Open interactive workspace <ArrowUpRight size={16}/></button><div className="feature-lines" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></motion.div></AnimatePresence></TiltCard></div>
- </div>{workspaceOpen&&<ModuleWorkspace key={active} moduleIndex={active} onSelect={setActive} onClose={()=>setWorkspaceOpen(false)}/>}</section>
+ <TiltCard className="module-feature-stage" max={6}><AnimatePresence mode="wait" initial={false}><motion.div className={`module-feature ${modules[active].color}`} key={active} style={{transformPerspective:1200}} initial={{opacity:0,rotateY:38,x:40,scale:.94,filter:'blur(8px)'}} animate={{opacity:1,rotateY:0,x:0,scale:1,filter:'blur(0px)',transition:{duration:.55,ease}}} exit={{opacity:0,rotateY:-30,x:-30,scale:.96,filter:'blur(6px)',transition:{duration:.2,ease:easeIn}}}><div className="feature-particles" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/><i/></div><motion.div className={`feature-orb ${modules[active].color}`} initial={{rotateY:-180,scale:.5,opacity:0}} animate={{rotateY:0,scale:1,opacity:1}} transition={{type:'spring',stiffness:160,damping:14,delay:.05}} style={{transformPerspective:600}}>{React.createElement(modules[active].icon,{size:43,strokeWidth:1.4})}</motion.div><span className="feature-number">MODULE / {modules[active].n}</span><h3 className="feature-title" aria-label={modules[active].name}>{modules[active].name.split('').map((c,k)=><motion.span key={k} aria-hidden="true" initial={{opacity:0,y:'0.6em',rotateX:-90}} animate={{opacity:1,y:0,rotateX:0}} transition={{delay:.12+k*.028,duration:.5,ease}} style={{display:'inline-block',whiteSpace:'pre',transformOrigin:'50% 100%'}}>{c}</motion.span>)}</h3><p>{modules[active].desc}</p><button type="button" className="text-link" onClick={()=>openWorkspace(active)}>Open interactive workspace <ArrowUpRight size={16}/></button><div className="feature-lines" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></motion.div></AnimatePresence><ClientModuleScene index={active} paused={workspaceOpen}/></TiltCard></div>
+ </div><AnimatePresence>{workspaceOpen&&<ModuleWorkspace modules={modules} moduleIndex={active} onSelect={setActive} onClose={closeWorkspace}/>}</AnimatePresence></section>
 }
-const operationalViews=[
- null,
- {title:'Inventory overview',summary:'A live snapshot of stock across your locations.',metrics:[['Stock value','₹24.8L','Across 3 locations'],['Active SKUs','8,420','126 categories'],['Needs attention','18','Low-stock items']],columns:['PRODUCT','LOCATION','ON HAND','STATUS'],rows:[['Studio headphones','Bengaluru · A-12','124 units','Healthy'],['Arc desk lamp','Mangaluru · B-04','18 units','Reorder soon'],['Everyday backpack','Mumbai · C-08','306 units','Healthy']]},
- {title:'Campaign studio',summary:'See what is reaching customers and what is gaining momentum.',metrics:[['Campaigns live','12','Across 4 channels'],['People reached','48.2K','This month'],['Engagement','8.6%','Up 1.4%']],columns:['CAMPAIGN','CHANNEL','REACH','STATUS'],rows:[['Autumn launch','Email · Social','12.4K','In progress'],['Welcome journey','Email','8.1K','Always on'],['Studio stories','Social','5.7K','Scheduled']]},
- {title:'People operations',summary:'A thoughtful overview of your team and people workflows.',metrics:[['Team members','246','Across 6 teams'],['Onboarding','8','In progress'],['Time off','14','Requests to review']],columns:['TEAM MEMBER','DEPARTMENT','NEXT STEP','STATUS'],rows:[['Aarav Mehta','Sales','Welcome check-in','On track'],['Mira Shah','Design','First-week review','Today'],['Dev Patel','Operations','Equipment setup','In progress']]},
- {title:'Finance overview',summary:'Keep cash flow, invoices and upcoming payments in view.',metrics:[['Receivables','₹8.4L','24 open invoices'],['Payables','₹3.2L','Due this week'],['Net cash flow','₹5.2L','Up 8.3%']],columns:['TRANSACTION','REFERENCE','AMOUNT','STATUS'],rows:[['Northstar Studio','INV-2408','₹84,000','Awaiting payment'],['Fieldwork Supply','BILL-118','₹32,500','Due tomorrow'],['Orchid Retail','INV-2403','₹1,24,000','Paid']]},
- {title:'Delivery control room',summary:'Coordinate shipments and keep every delivery moving.',metrics:[['In transit','38','Across 5 routes'],['Delivered today','124','On schedule'],['Needs attention','3','Review routes']],columns:['SHIPMENT','DESTINATION','ETA','STATUS'],rows:[['TM-2048','Bengaluru South','11:40 AM','In transit'],['TM-2047','Mangaluru Central','12:15 PM','On schedule'],['TM-2046','Mumbai West','1:05 PM','Delayed']]},
- {title:'Document library',summary:'Find the latest business files and keep work in one place.',metrics:[['Files shared','1,284','Across 18 folders'],['Awaiting review','7','3 due today'],['Storage used','42%','Of 500 GB']],columns:['DOCUMENT','OWNER','UPDATED','STATUS'],rows:[['Q3 operating plan','Aarav Mehta','Today · 9:42 AM','In review'],['Retail partnership','Mira Shah','Yesterday','Approved'],['Team handbook','Dev Patel','Nov 14','Updated']]},
- {title:'Compliance center',summary:'A clear view of reviews, controls and upcoming obligations.',metrics:[['Controls active','42','Across 8 areas'],['Reviews complete','96%','This quarter'],['Due this week','2','Plan ahead']],columns:['REVIEW','OWNER','DUE DATE','STATUS'],rows:[['Access review','IT operations','Nov 20','In progress'],['Vendor assessment','Finance','Nov 22','Needs review'],['Policy acknowledgement','People team','Nov 28','On track']]}
-]
-const startingContacts=[
- {name:'Aarav Mehta',company:'Northstar Studio',email:'aarav@northstar.studio',value:'₹4.8L',status:'Qualified',initials:'AM',tone:'coral'},
- {name:'Mira Shah',company:'Fieldwork Supply',email:'mira@fieldwork.co',value:'₹2.2L',status:'Proposal',initials:'MS',tone:'lilac'},
- {name:'Kabir Rao',company:'Orchid Retail',email:'kabir@orchid.in',value:'₹1.6L',status:'New lead',initials:'KR',tone:'mint'},
- {name:'Isha Nair',company:'Good Ground Co.',email:'isha@goodground.co',value:'₹3.4L',status:'Contacted',initials:'IN',tone:'blue'}
-]
-const crmDeals=[
- {stage:'Qualified',amount:'₹18.4L',deals:[['Northstar Studio','Aarav Mehta','₹4.8L','AM'],['Cedar & Co.','Tara Bose','₹3.2L','TC']]},
- {stage:'Proposal',amount:'₹12.6L',deals:[['Fieldwork Supply','Mira Shah','₹2.2L','MS'],['Morrow Living','Neel Das','₹6.4L','NL']]},
- {stage:'Negotiation',amount:'₹8.1L',deals:[['Orchid Retail','Kabir Rao','₹1.6L','KR'],['Good Ground Co.','Isha Nair','₹3.4L','IN']]}
-]
-const crmActivities=[
- ['09:42 AM','Proposal shared','Mira Shah · Fieldwork Supply','proposal'],
- ['10:18 AM','Discovery call booked','Aarav Mehta · Northstar Studio','calendar'],
- ['11:05 AM','New lead added','Kabir Rao · Orchid Retail','lead'],
- ['12:30 PM','Follow-up reminder','Isha Nair · Good Ground Co.','follow']
-]
-function ModuleWorkspace({moduleIndex,onSelect,onClose}){
- const currentModule=modules[moduleIndex]
- const ModuleIcon=currentModule.icon
- const [tab,setTab]=useState('Pipeline')
- const [query,setQuery]=useState('')
- const [contacts,setContacts]=useState(startingContacts)
- const [leadFormOpen,setLeadFormOpen]=useState(false)
- const workspaceShellRef=React.useRef(null)
- React.useEffect(()=>{
-  const previousOverflow=document.body.style.overflow
-  const handleKeyDown=event=>{if(event.key==='Escape'){event.preventDefault();if(leadFormOpen)setLeadFormOpen(false);else onClose()}}
-  document.body.style.overflow='hidden'
-  document.addEventListener('keydown',handleKeyDown,true)
-  return ()=>{document.body.style.overflow=previousOverflow;document.removeEventListener('keydown',handleKeyDown,true)}
- },[leadFormOpen,onClose])
- React.useEffect(()=>{workspaceShellRef.current?.focus()},[])
- const addLead=event=>{
-  event.preventDefault()
-  const data=new FormData(event.currentTarget)
-  const name=String(data.get('name')||'').trim()
-  const company=String(data.get('company')||'').trim()
-  const email=String(data.get('email')||'').trim()
-  const initials=name.split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase()
-  setContacts(previous=>[{name,company,email,value:'—',status:'New lead',initials,tone:'blue'},...previous])
-  setQuery('')
-  setTab('Contacts')
-  setLeadFormOpen(false)
- }
- const isCRM=moduleIndex===0
- const operational=operationalViews[moduleIndex]
- return <div className="workspace-overlay" role="presentation" onClick={event=>{if(event.target===event.currentTarget)onClose()}}>
-  <div ref={workspaceShellRef} tabIndex={-1} className={`workspace-shell workspace-${currentModule.color}`} role="dialog" aria-modal="true" aria-labelledby="workspace-title" onClick={event=>event.stopPropagation()}>
-   <header className="workspace-site-header">
-    <a href="#home" className="workspace-brand" onClick={onClose}><span className="workspace-brand-mark">M</span><span><b>themanager</b><small>BUSINESS PLATFORM</small></span></a>
-    <nav className="workspace-site-links" aria-label="Website navigation"><a href="#platform" onClick={onClose}>Platform</a><a href="#industries" onClick={onClose}>Solutions</a><a href="#resources" onClick={onClose}>Resources</a><a href="#company" onClick={onClose}>Company</a></nav>
-    <div className="workspace-site-actions">
-     <label className="workspace-search"><Search size={16}/><input aria-label="Search module content" placeholder={isCRM?'Search deals or contacts':'Search records'} value={query} onChange={event=>setQuery(event.target.value)}/></label>
-     <button type="button" className="workspace-close" aria-label="Return to the main website" onClick={onClose}><span>Back to site</span><X size={16}/></button>
-    </div>
-   </header>
-   <div className="workspace-module-bar">
-    <span className="workspace-module-bar-label">Explore the platform</span>
-    <nav className="workspace-module-nav" aria-label="Business modules">{modules.map((item,index)=>{const Icon=item.icon;return <button type="button" key={item.name} className={`workspace-module-link ${index===moduleIndex?'current':''}`} aria-current={index===moduleIndex?'page':undefined} onClick={()=>onSelect(index)}><Icon size={16}/><span>{item.name}</span></button>})}</nav>
-   </div>
-   <div className="workspace-main">
-    {isCRM?<section className="crm-workspace">
-     <div className="crm-heading"><div><span className="workspace-eyebrow"><ModuleIcon size={14}/> CUSTOMER RELATIONSHIPS</span><h2 id="workspace-title">Sales, with a clearer view.</h2><p>Every conversation, opportunity and next step—connected in one place.</p></div><div className="crm-heading-actions"><span className="crm-sync"><i/> Sample data</span><button type="button" className="crm-primary-button" onClick={()=>setLeadFormOpen(true)}><Plus size={16}/> New lead</button></div></div>
-     <div className="crm-stats">{[['Pipeline value','₹39.1L','+12.8%'],['Open opportunities','24','+6 this month'],['Won this month','08','+18.4%'],['Avg. deal size','₹2.4L','+4.2%']].map(([label,value,delta],index)=><div className={`crm-stat crm-stat-${index}`} key={label}><span>{label}</span><b>{value}</b><small><TrendingUp size={13}/>{delta}</small></div>)}</div>
-     <div className="crm-tab-row" role="tablist" aria-label="CRM views">{['Pipeline','Contacts','Activities'].map((view,index)=><button type="button" role="tab" aria-selected={tab===view} className={tab===view?'active':''} key={view} onClick={()=>setTab(view)}>{index===0?<Activity size={15}/>:index===1?<Users size={15}/>:<CalendarDays size={15}/>} {view}</button>)}</div>
-     <div className="crm-content-grid"><section className="crm-primary-panel">
-      <div className="crm-panel-heading"><div><b>{tab==='Pipeline'?'Deal pipeline':tab==='Contacts'?'People & companies':'Team activity'}</b><small>{tab==='Pipeline'?'Move opportunities forward with confidence':tab==='Contacts'?'Your relationships, all in one place':'The latest updates across your workspace'}</small></div>{tab==='Pipeline'&&<span className="crm-view-label">THIS QUARTER <ChevronDown size={13}/></span>}</div>
-      {tab==='Pipeline'&&<div className="deal-pipeline">{crmDeals.map(stage=>{const deals=stage.deals.filter(deal=>deal.join(' ').toLowerCase().includes(query.toLowerCase()));return <div className="deal-stage" key={stage.stage}><div className="deal-stage-heading"><span><i/> {stage.stage}</span><b>{stage.amount}</b></div><div className="deal-stage-cards">{deals.map(([company,owner,value,initials])=><article className="deal-card" key={company}><div className="deal-card-top"><b>{company}</b><span aria-hidden="true">···</span></div><span className="deal-owner"><i>{initials}</i>{owner}</span><div className="deal-value"><b>{value}</b><span>Potential value</span></div></article>)}{deals.length===0&&<p className="crm-empty">No matching deals</p>}</div></div>})}</div>}
-      {tab==='Contacts'&&<div className="contacts-table-wrap"><table className="contacts-table"><thead><tr><th>CONTACT</th><th>COMPANY</th><th>DEAL VALUE</th><th>STAGE</th></tr></thead><tbody>{contacts.filter(contact=>`${contact.name} ${contact.company} ${contact.email}`.toLowerCase().includes(query.toLowerCase())).map(contact=><tr key={`${contact.email}-${contact.name}`}><td><span className={`contact-avatar ${contact.tone}`}>{contact.initials}</span><span className="contact-name">{contact.name}<small>{contact.email}</small></span></td><td>{contact.company}</td><td>{contact.value}</td><td><span className={`contact-status status-${contact.status.toLowerCase().replace(/\s/g,'-')}`}>{contact.status}</span></td></tr>)}</tbody></table>{contacts.filter(contact=>`${contact.name} ${contact.company} ${contact.email}`.toLowerCase().includes(query.toLowerCase())).length===0&&<p className="crm-empty contacts-empty">No contacts match your search.</p>}</div>}
-      {tab==='Activities'&&<div className="activity-feed">{crmActivities.filter(item=>item.join(' ').toLowerCase().includes(query.toLowerCase())).map(([time,title,detail,type],index)=><article className="activity-row" key={title}><span className={`activity-icon activity-${type}`}>{type==='calendar'?<CalendarDays size={15}/>:type==='lead'?<Users size={15}/>:type==='follow'?<Clock3 size={15}/>:<Mail size={15}/>}</span><div><b>{title}</b><small>{detail}</small></div><time>{time}</time><i className={index===0?'unread':''}/></article>)}{crmActivities.filter(item=>item.join(' ').toLowerCase().includes(query.toLowerCase())).length===0&&<p className="crm-empty">No activity matches your search.</p>}</div>}
-     </section>
-     <aside className="crm-insight-panel"><div className="insight-kicker"><span/> THE MOMENTUM MAP</div><div className="crm-orbit-art" aria-hidden="true"><div className="crm-orbit-ring ring-one"/><div className="crm-orbit-ring ring-two"/><div className="crm-orbit-ring ring-three"/><div className="crm-orbit-core"><span>M</span></div><i className="crm-orbit-node node-one"/><i className="crm-orbit-node node-two"/><i className="crm-orbit-node node-three"/></div><span className="insight-caption">HEALTHY PIPELINE</span><b className="insight-value">+18.4%</b><p>More qualified opportunities than last month.</p><div className="insight-divider"/><span className="insight-next-label">NEXT BEST ACTION</span><b className="insight-next-title">Follow up with 3 warm leads</b><span className="insight-next-copy">A timely check-in can keep the conversation moving.</span><button type="button" className="insight-action" onClick={()=>{setTab('Contacts');setQuery('')}}>View suggested contacts <ArrowRight size={14}/></button></aside>
-     </div>
-    </section>:<OperationalWorkspace module={currentModule} moduleIndex={moduleIndex} data={operational} query={query}/>}
-   </div>
-   {leadFormOpen&&<div className="lead-form-overlay" onClick={event=>{if(event.target===event.currentTarget)setLeadFormOpen(false)}}><form className="lead-form-card" onSubmit={addLead}><button type="button" className="lead-form-close" aria-label="Close new lead form" onClick={()=>setLeadFormOpen(false)}><X size={18}/></button><span className="workspace-eyebrow">CRM / NEW RELATIONSHIP</span><h3>Add a new lead</h3><p>Capture the essentials and keep the conversation moving.</p><label>Full name<input name="name" required autoFocus placeholder="e.g. Rhea Kapoor"/></label><label>Company<input name="company" required placeholder="e.g. Fieldnotes Studio"/></label><label>Work email<input name="email" type="email" required placeholder="rhea@company.com"/></label><div className="lead-form-actions"><button type="button" className="lead-cancel" onClick={()=>setLeadFormOpen(false)}>Cancel</button><button type="submit" className="crm-primary-button"><Plus size={15}/> Save lead</button></div></form></div>}
-  </div>
- </div>
-}
-function OperationalWorkspace({module,moduleIndex,data,query}){
- const Icon=module.icon
- const rows=data.rows.filter(row=>row.join(' ').toLowerCase().includes(query.toLowerCase()))
- return <section className={`operational-workspace operational-${module.color}`}>
-  <div className="crm-heading">
-   <div><span className="workspace-eyebrow"><Icon size={14}/> {module.tag.toUpperCase()}</span><h2 id="workspace-title">{data.title}</h2><p>{data.summary}</p></div>
-   <span className="crm-sync"><i/> Sample data</span>
-  </div>
-  <div className="crm-stats">{data.metrics.map(([label,value,delta],index)=><div className={`crm-stat crm-stat-${index}`} key={label}><span>{label}</span><b>{value}</b><small>{delta}</small></div>)}</div>
-  <div className="ops-overview-grid">
-   <section className="crm-primary-panel operational-table-panel">
-    <div className="crm-panel-heading"><div><b>Recent activity</b><small>Updates from across your {module.name.toLowerCase()} workspace</small></div><span className="crm-view-label"><Activity size={13}/> RECENT RECORDS</span></div>
-    <div className="contacts-table-wrap"><table className="contacts-table"><thead><tr>{data.columns.map(column=><th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(([primary,secondary,value,status])=><tr key={primary}><td><span className="contact-avatar coral"><Icon size={15}/></span><span className="contact-name">{primary}</span></td><td>{secondary}</td><td>{value}</td><td><span className={`contact-status status-${status.toLowerCase().replace(/\s/g,'-')}`}>{status}</span></td></tr>)}</tbody></table>{rows.length===0&&<p className="crm-empty contacts-empty">No records match your search.</p>}</div>
-   </section>
-   <aside className="ops-visual-panel">
-    <div className="ops-visual-head"><span>MODULE SIGNAL</span><span className="ops-visual-live"><i/> SAMPLE</span></div>
-    <div className={`ops-3d-stage ops-scene-${moduleIndex}`} aria-hidden="true"><div className="ops-visual-glow"/><div className="ops-visual-ring ops-ring-a"/><div className="ops-visual-ring ops-ring-b"/><div className="ops-cube-spinner"><WorkspaceCube className="ops-cube-main" Icon={Icon}/></div><WorkspaceCube className="ops-cube-satellite" Icon={Icon}/><span className="ops-spark spark-one"/><span className="ops-spark spark-two"/><span className="ops-spark spark-three"/></div>
-    <div className="ops-visual-value"><span>CONNECTED SIGNAL</span><b>{data.metrics[0][1]}</b><small>{data.metrics[0][0]}</small></div><p>{data.summary}</p>
-    <div className="ops-visual-footer"><span><i/> WORKSPACE READY</span></div>
-   </aside>
-  </div>
-  <div className="operational-footnote"><span className="workspace-orbit-mini"><i/></span><div><b>Connected by design</b><small>{module.desc}</small></div><span className="operational-live"><i/> SAMPLE DATA</span></div>
- </section>
-}
-function WorkspaceCube({className,Icon}){
- return <div className={`ops-cube ${className}`}><span className="ops-cube-face ops-face-front"><Icon size={27}/></span><span className="ops-cube-face ops-face-back"/><span className="ops-cube-face ops-face-right"/><span className="ops-cube-face ops-face-left"/><span className="ops-cube-face ops-face-top"/><span className="ops-cube-face ops-face-bottom"/></div>
-}
-function modulesIcon({icon:Icon}){return <Icon size={43} strokeWidth={1.4}/>}
 function Industries(){
  return <section className="section industries-section" id="industries"><ScrollStage className="container"><div className="industry-head"><SectionHeading eyebrow="BUILT FOR YOUR WORLD" title={<>Flexible by design.<br/><span className="gradient-text">Ready for your industry.</span></>} copy="Different industries. Different challenges. One connected platform that adapts to the way your organisation works."/><a href="#contact" className="text-link">Find your solution <ArrowRight size={16}/></a></div><div className="industry-grid">{industries.map((x,i)=>{const I=x.icon;return <Reveal key={x.name} delay={i*.08}><TiltCard max={9}><a className="industry-card" href="#contact"><div className="industry-top"><span>{x.number} / INDUSTRY</span><ArrowUpRight size={18}/></div><div className="industry-icon"><I size={29}/></div><h3>{x.name}</h3><p>{x.desc}</p><span className="industry-link">Explore solution <ArrowRight size={15}/></span><div className="industry-glow"/></a></TiltCard></Reveal>})}</div></ScrollStage></section>
 }
