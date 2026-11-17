@@ -1,0 +1,14 @@
+{
+  "source": "github:hegdenihal9740-stack/man",
+  "summary": "Static React + Vite marketing site (The Manager). No database, auth, storage, payments, email or server code detected.",
+  "capabilities": [
+    {"capability": "code", "source": "src/App.jsx, src/components/OrbitalScene.jsx", "outcome": "migrate", "status": "in_progress", "next_action": "Port to TanStack Start index route"},
+    {"capability": "styles", "source": "src/styles.css", "outcome": "migrate", "status": "in_progress", "next_action": "Load as separate stylesheet"},
+    {"capability": "3d hero (three / react-three-fiber)", "source": "OrbitalScene.jsx", "outcome": "migrate", "status": "in_progress", "next_action": "Client-only render with R3F v9 for React 19"},
+    {"capability": "schema/records", "source": "none", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+    {"capability": "auth", "source": "none", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+    {"capability": "contact form backend", "source": "client-only demo state", "outcome": "preserve_as_is", "status": "verified", "next_action": "Optional: connect to Lovable Cloud if user wants enquiries saved"},
+    {"capability": "secrets", "source": "none", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+    {"capability": "verification", "source": "-", "outcome": "verify", "status": "pending", "next_action": "Screenshot preview"}
+  ]
+}
