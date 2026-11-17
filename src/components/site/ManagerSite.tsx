@@ -5,7 +5,7 @@ import { ArrowUpRight, ArrowRight, Menu, X, ChevronDown, Check, Zap, ShieldCheck
 const OrbitalScene = React.lazy(() => import('./OrbitalScene'))
 const ModuleScene = React.lazy(() => import('./ModuleScenes'))
 import ModuleWorkspace from './ModuleWorkspace'
-function ClientModuleScene({index,paused}){const ref=React.useRef(null);const inView=useInView(ref,{margin:'120px'});const [mounted,setMounted]=useState(false);React.useEffect(()=>setMounted(true),[]);return <div ref={ref} className="mf-scene" aria-hidden="true">{mounted&&<React.Suspense fallback={null}><ModuleScene index={index} paused={paused||!inView} sparkles={false} distance={6.6} className="mf-canvas"/></React.Suspense>}</div>}
+function ClientModuleScene({index,paused}){const ref=React.useRef(null);const inView=useInView(ref,{margin:'120px'});const [mounted,setMounted]=useState(false);React.useEffect(()=>setMounted(true),[]);return <div ref={ref} className="mf-scene" aria-hidden="true">{mounted&&<React.Suspense fallback={null}><ModuleScene index={index} paused={paused||!inView} sparkles={false} distance={5.4} className="mf-canvas"/></React.Suspense>}</div>}
 function ClientOrbitalScene(){const [mounted,setMounted]=useState(false);React.useEffect(()=>setMounted(true),[]);if(!mounted)return <div className="orbital-canvas"/>;return <React.Suspense fallback={<div className="orbital-canvas"/>}><OrbitalScene/></React.Suspense>}
 
 const modules = [

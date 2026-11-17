@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Search, X, Plus, TrendingUp, Activity, Users, CalendarDays, Mail, Clock3, ChevronDown, Sparkles } from "lucide-react";
 import { modulePalette } from "./modulePalette";
@@ -110,7 +111,7 @@ export default function ModuleWorkspace({ modules, moduleIndex, onSelect, onClos
   const ops = records[moduleIndex];
   const opsRows = ops ? ops.rows.filter((r) => matches(query, ...r)) : [];
 
-  return (
+  return createPortal(
     <motion.div className="mw-overlay" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <motion.div
         ref={shellRef}
@@ -160,7 +161,7 @@ export default function ModuleWorkspace({ modules, moduleIndex, onSelect, onClos
                   <motion.span className="mw-kicker" variants={fadeUp}><mod.icon size={13} /> {hero.kicker}<em><i /> Sample data</em></motion.span>
                   <h2 id="workspace-title" className="mw-title" aria-label={hero.title}>
                     {words.map((w, k) => (
-                      <motion.span key={k} aria-hidden="true" className={k === words.length - 1 ? "mw-title-glow" : ""} variants={{ hidden: { opacity: 0, y: "0.7em", rotateX: -80 }, show: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.7, ease } } }}>{w} </motion.span>
+                      <motion.span key={k} aria-hidden="true" className={k === words.length - 1 ? "mw-title-glow" : ""} variants={{ hidden: { opacity: 0, y: "0.7em", rotateX: -80 }, show: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.7, ease } } }}>{w}</motion.span>
                     ))}
                   </h2>
                   <motion.p className="mw-summary" variants={fadeUp}>{hero.summary}</motion.p>
@@ -305,7 +306,8 @@ export default function ModuleWorkspace({ modules, moduleIndex, onSelect, onClos
           )}
         </AnimatePresence>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 }
 
