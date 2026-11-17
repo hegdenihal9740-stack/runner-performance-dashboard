@@ -186,9 +186,15 @@
 .mw-ghost{height:44px;padding:0 16px;border:1px solid var(--mw-line);border-radius:12px;background:transparent;color:var(--mw-text);font-weight:600;font-size:13px}
 
 /* module showcase card (homepage) — live 3D scene */
-.module-feature-stage{position:relative}
+.module-feature-stage{position:relative;container-type:inline-size;container-name:mfstage}
 .mf-scene{position:absolute;right:1px;bottom:1px;width:55%;height:68%;z-index:3;pointer-events:none;overflow:hidden;border-radius:0 0 21px 0}
 .module-feature p{max-width:250px}
+/* narrow card (tablet two-column, phones): scene sits in its own band under the text */
+@container mfstage (max-width:560px){
+ .mf-scene{left:1px;right:1px;bottom:1px;width:auto;height:250px;border-radius:0 0 21px 21px}
+ .module-feature{padding-bottom:262px!important}
+ .module-feature p{max-width:none}
+}
 .mf-scene .mf-canvas{position:absolute;inset:0}
 .module-feature .feature-lines{opacity:.12}
 
@@ -224,8 +230,6 @@
  .mw-pipeline{grid-template-columns:1fr}
  .mw-tabs button>span:not(.mw-tab-pill){display:none}
  .mw-foot{flex-wrap:wrap}
- .mf-scene{position:relative;right:auto;bottom:auto;width:100%;height:240px;margin-top:-30px;border-radius:0}
- .module-feature p{max-width:330px}
 }
 @media(prefers-reduced-motion:reduce){
  .mw-bg i,.mw-stage-floor,.mw-chip,.mw-foot-orb,.mw-kicker em i,.mw-stage-label i{animation:none}
