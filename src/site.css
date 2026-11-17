@@ -889,3 +889,8 @@ button.text-link:hover{color:#d36d59}
 .process-step{border-top-color:#ffffff1f}
 .process-connector{background:linear-gradient(90deg,#ff967c,transparent)}
 .contact-form label{color:#c9bcd4}
+
+/* Keep scroll-in 3D transforms from widening the page; clip (not hidden) keeps sticky sections working. */
+html,body{overflow-x:clip}
+/* Narrower screens: drop the "AI insight" notice below the chart so it no longer covers the bars. */
+@media(max-width:1000px){.float-two{bottom:-26px}}
