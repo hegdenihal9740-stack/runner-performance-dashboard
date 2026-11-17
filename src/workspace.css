@@ -103,7 +103,7 @@
 .mw-tag{display:inline-flex;align-items:center;gap:6px;font:9px 'DM Mono',monospace;letter-spacing:1.3px;color:var(--mw-muted);padding:7px 10px;border:1px solid var(--mw-line);border-radius:30px}
 .mw-tabs{display:flex;padding:4px;border:1px solid var(--mw-line);border-radius:13px;background:rgba(0,0,0,.2)}
 .mw-tabs button{position:relative;display:flex;align-items:center;gap:7px;padding:8px 13px;border:0;border-radius:10px;background:transparent;color:var(--mw-muted);font-size:12px;font-weight:600}
-.mw-tabs button span,.mw-tabs button svg{position:relative;z-index:1}
+.mw-tabs button>span:not(.mw-tab-pill),.mw-tabs button>svg{position:relative;z-index:1}
 .mw-tabs button.active{color:#140d1b}
 .mw-tab-pill{position:absolute;inset:0;border-radius:10px;background:linear-gradient(135deg,var(--mw-accent),color-mix(in oklab,var(--mw-accent) 60%,#fff))}
 .mw-pipeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -221,7 +221,7 @@
  .mw-stage{min-height:300px}
  .mw-stats-3,.mw-stats-4{grid-template-columns:repeat(2,minmax(0,1fr))}
  .mw-pipeline{grid-template-columns:1fr}
- .mw-tabs button span{display:none}
+ .mw-tabs button>span:not(.mw-tab-pill){display:none}
  .mw-foot{flex-wrap:wrap}
  .mf-scene{position:relative;right:auto;width:100%;height:240px;margin-top:-30px}
 }
